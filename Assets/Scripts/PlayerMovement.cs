@@ -3,12 +3,23 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float speed = 5f;
+    [SerializeField] private float speed = 10f;
 
     private Rigidbody rb;
     private InputSystem_Actions inputActions;
 
     private Vector2 movement;
+
+    public Transform particles;
+    private ParticleSystem ParticlesSystem;
+    private Vector3 position;
+
+    private void start(){
+        ParticlesSystem = particles.GetComponent<ParticleSystem>();
+        ParticlesSystem.Stop();
+
+
+    }
 
     private void Awake()
     {
@@ -43,4 +54,26 @@ public class PlayerMovement : MonoBehaviour
             rb.position + direction * speed * Time.fixedDeltaTime
         );
     }
+
+void OnTriggerEnter(Collider other){
+
+if(other.gameObject.CompareTag("Collectable")){
+
+
+    position = other.gameObject.transform.position;
+    particles.position = position;
+    ParticlesSystem = particles.GetComponent<ParticleSystem>();
+    ParticlesSystem.Play();
+
+other.gameObject.SetActive(false);
+
+}else {
+
+
+}
+
+}
+
+
+
 }
