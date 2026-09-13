@@ -6,53 +6,49 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float speed = 10f;
 
     private Rigidbody rb;
-    private InputSystem_Actions inputActions;
+    private InputSystem_Actions controles;
 
-    private Vector2 movement;
+    private Vector2 moveInput;
 
     public Transform particles;
     private ParticleSystem ParticlesSystem;
     private Vector3 position;
 
-    private void start(){
+   void Start(){
+
+        rb =GetComponent<Rigidbody>();
+
         ParticlesSystem = particles.GetComponent<ParticleSystem>();
         ParticlesSystem.Stop();
 
 
     }
 
-    private void Awake()
+     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        inputActions = new InputSystem_Actions();
+        controles = new InputSystem_Actions();
+
+        controles.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        controles.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+
     }
 
-    private void OnEnable()
+     void OnEnable()
     {
-        inputActions.Enable();
+        controles.Enable();
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
-        inputActions.Disable();
+        controles.Disable();
     }
 
-    private void Update()
-    {
-        movement = inputActions.Player.Move.ReadValue<Vector2>();
-    }
+  
 
-    private void FixedUpdate()
+     void FixedUpdate()
     {
-        Vector3 direction = new Vector3(
-            movement.x,
-            0f,
-            movement.y
-        );
-
-        rb.MovePosition(
-            rb.position + direction * speed * Time.fixedDeltaTime
-        );
+        Vector3 movement = new Vector3(moveInput.x, 0.0f, moveInput.y);
+        rb.AddForce(movement * speed);
     }
 
 void OnTriggerEnter(Collider other){
