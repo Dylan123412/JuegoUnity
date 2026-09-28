@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,12 +15,18 @@ public class PlayerMovement : MonoBehaviour
     private ParticleSystem ParticlesSystem;
     private Vector3 position;
 
+    private int counter;
+
+    public TextMeshProUGUI textCounter;
+
    void Start(){
 
         rb =GetComponent<Rigidbody>();
 
         ParticlesSystem = particles.GetComponent<ParticleSystem>();
         ParticlesSystem.Stop();
+
+        textCounter.text = "Counter: " + counter.ToString();
 
 
     }
@@ -60,6 +67,15 @@ if(other.gameObject.CompareTag("Collectable")){
     particles.position = position;
     ParticlesSystem = particles.GetComponent<ParticleSystem>();
     ParticlesSystem.Play();
+    ParticlesSystem.Stop();
+    counter = counter + 1;
+    textCounter.text = "Counter: " + counter.ToString();
+
+    if(counter >= 10)
+            {
+                textCounter.text = "Has ganado";
+
+            }
 
 other.gameObject.SetActive(false);
 
