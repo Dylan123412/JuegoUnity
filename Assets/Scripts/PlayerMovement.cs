@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -67,7 +68,7 @@ if(other.gameObject.CompareTag("Collectable")){
     particles.position = position;
     ParticlesSystem = particles.GetComponent<ParticleSystem>();
     ParticlesSystem.Play();
-    ParticlesSystem.Stop();
+    
     counter = counter + 1;
     textCounter.text = "Counter: " + counter.ToString();
 
@@ -78,13 +79,21 @@ if(other.gameObject.CompareTag("Collectable")){
             }
 
 other.gameObject.SetActive(false);
-
+StartCoroutine(StopParticles(ParticlesSystem));
 }else {
 
 
 }
 
 }
+
+public IEnumerator StopParticles(ParticleSystem particleSystem)
+    {
+        
+        yield return new WaitForSeconds(1);
+        particleSystem.Stop();
+    }
+
 
 
 
