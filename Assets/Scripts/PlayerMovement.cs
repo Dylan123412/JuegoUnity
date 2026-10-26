@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
 
     public TextMeshProUGUI textCounter;
 
+    private Animator anim;
+
    void Start(){
 
         rb =GetComponent<Rigidbody>();
@@ -28,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
         ParticlesSystem.Stop();
 
         textCounter.text = "Counter: " + counter.ToString();
+
+       
 
 
     }
@@ -38,7 +42,9 @@ public class PlayerMovement : MonoBehaviour
 
         controles.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controles.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+        anim = GetComponent<Animator>();
 
+        controles.Player.Attack.ApplyBindingOverride("<Keyboard>/leftCtrl");
     }
 
      void OnEnable()
@@ -92,6 +98,27 @@ public IEnumerator StopParticles(ParticleSystem particleSystem)
         
         yield return new WaitForSeconds(1);
         particleSystem.Stop();
+    }
+
+void Update()
+    {
+        if (controles.Player.Attack.WasPressedThisFrame())
+        {
+            Animar();
+        }
+
+    }
+
+void Animar()
+    {
+        anim.SetBool("isSendingMagic", true);
+        StartCoroutine(RestartAnimation());
+
+    }
+    public IEnumerator RestartAnimation()
+    {
+        yield return new WaitForSeconds(1.5f);
+        anim.SetBool("isSendingMagic", false);
     }
 
 
