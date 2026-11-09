@@ -22,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Animator anim;
 
+    public GameObject power;
+
    void Start(){
 
         rb =GetComponent<Rigidbody>();
@@ -111,13 +113,17 @@ void Update()
 
 void Animar()
     {
-        anim.SetBool("isSendingMagic", true);
+        
         StartCoroutine(RestartAnimation());
 
     }
     public IEnumerator RestartAnimation()
     {
-        yield return new WaitForSeconds(1.5f);
+
+        anim.SetBool("isSendingMagic", true);
+        yield return new WaitForSeconds(1.0f);
+        power.transform.position = transform.position;
+        power.SendMessage("Shoot");
         anim.SetBool("isSendingMagic", false);
     }
 
